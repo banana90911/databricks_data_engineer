@@ -1,14 +1,8 @@
-# 📘 Databricks 데이터 엔지니어링 기초 — 핵심 개념 정리
-
-> **목표:** 실무 Databricks 프로젝트 수행 + **Databricks Certified Data Engineer Professional** 취득
->
-> 📌 표시
-> - 🎯 **시험 포인트** — 자격증 시험에 자주 나오는 개념
-> - ⚠️ **주의** — 헷갈리기 쉬운 부분
+# Databricks 데이터 엔지니어링 기초 — 핵심 개념 정리
 
 ---
 
-## 📑 목차
+## 목차
 
 1. [Databricks Data Intelligence Platform](#1-databricks-data-intelligence-platform)
 2. [Compute](#2-compute)
@@ -25,7 +19,7 @@
 13. [제품 명칭 변경 정리](#13-제품-명칭-변경-정리)
 14. [자격증 준비 가이드](#14-자격증-준비-가이드)
 15. [자가 점검 문제](#15-자가-점검-문제)
-16. [참고 링크와 다음 학습](#16-참고-링크와-다음-학습)
+16. [참고 링크](#16-참고-링크)
 
 ---
 
@@ -48,7 +42,7 @@
 | 워크로드 | **Lakeflow** (Connect · Jobs · Declarative Pipelines), Databricks SQL | 수집, 변환, 오케스트레이션, 분석 |
 | AI | Genie Code, AI/BI 대시보드, Genie, Mosaic AI | AI 보조 개발, 자연어 분석, ML |
 
-### 1-3. Control Plane vs Compute Plane 🎯
+### 1-3. Control Plane vs Compute Plane
 
 | 구분 | 실행 위치 | 포함 요소 |
 |---|---|---|
@@ -67,7 +61,7 @@
 
 ## 2. Compute
 
-### 2-1. Compute 유형 🎯
+### 2-1. Compute 유형
 
 | 유형 | 용도 | 특징 |
 |---|---|---|
@@ -77,7 +71,7 @@
 | **SQL Warehouse** | SQL 쿼리, BI, 대시보드 | SQL 워크로드에 특화 |
 | **Instance Pool** | 클러스터 시작 가속 | 유휴 VM을 미리 확보 |
 
-### 2-2. SQL Warehouse 3종 🎯
+### 2-2. SQL Warehouse 3종
 
 | 유형 | 실행 위치 | 활성화된 최적화 | 사용 시점 |
 |---|---|---|---|
@@ -85,7 +79,7 @@
 | **Pro** | 고객 클라우드 계정 | Photon + Predictive IO | 네트워크/규정 준수 요건으로 서버리스를 쓸 수 없을 때 |
 | **Classic** | 고객 클라우드 계정 | Photon만 | 레거시. 최신 최적화 미적용 |
 
-> 🎯 **암기 팁:** 최적화 기능 개수 Serverless(3) > Pro(2) > Classic(1). Intelligent Workload Management는 서버리스에만 있다.
+> **암기 팁:** 최적화 기능 개수 Serverless(3) > Pro(2) > Classic(1). Intelligent Workload Management는 서버리스에만 있다.
 
 ### 2-3. 알아둘 용어
 
@@ -112,14 +106,14 @@
 | `%pip install 패키지` | 노트북 범위 Python 라이브러리 설치 |
 | `%fs` | `dbutils.fs` 축약 |
 
-> 🎯 **`%run` vs `dbutils.notebook.run()`**
+> `%run` **vs** `dbutils.notebook.run()`
 >
 > | | `%run` | `dbutils.notebook.run(path, timeout, args)` |
 > |---|---|---|
 > | 실행 방식 | 같은 컨텍스트에서 실행 | 별도 실행(임시 Job) |
-> | 변수/함수 공유 | ✅ 공유됨 | ❌ 공유 안 됨 |
-> | 인자 전달 | ❌ | ✅ |
-> | 반환값 | ❌ | ✅ `dbutils.notebook.exit(값)` |
+> | 변수/함수 공유 | O 공유됨 | X 공유 안 됨 |
+> | 인자 전달 | X | O |
+> | 반환값 | X | O `dbutils.notebook.exit(값)` |
 
 ### 3-2. Python에서 SQL 사용하기
 
@@ -134,7 +128,7 @@ spark.sql(f"LIST '/Volumes/{my_catalog}/{my_schema}/myfiles/'").display()
 
 - `spark`: 노트북에 기본 제공되는 `SparkSession` 객체
 - `display(df)` / `df.display()`: 결과를 표·차트로 렌더링
-- ⚠️ `spark.sql("""... {my_catalog} ...""")`처럼 **`f`를 빠뜨리면 변수가 치환되지 않고** 문자열 `{my_catalog}`가 그대로 들어가 오류가 난다. 아주 흔한 실수.
+- 주의: `spark.sql("""... {my_catalog} ...""")`처럼 `f`**를 빠뜨리면 변수가 치환되지 않고** 문자열 `{my_catalog}`가 그대로 들어가 오류가 난다. 아주 흔한 실수.
 
 ### 3-3. dbutils 주요 기능
 
@@ -157,7 +151,7 @@ SELECT current_date(), current_timestamp();
 
 ## 4. Unity Catalog
 
-### 4-1. 3단계 네임스페이스 🎯🎯
+### 4-1. 3단계 네임스페이스
 
 | 계층 | 설명 | 예시 |
 |---|---|---|
@@ -166,8 +160,8 @@ SELECT current_date(), current_timestamp();
 | **Schema** (= Database) | 관련 객체 묶음. 프로젝트·팀·도메인 단위 | `prod.sales` |
 | **Table / View / Volume / Function / Model** | 실제 데이터 객체 | `prod.sales.orders` |
 
-- 테이블 전체 이름: **`catalog.schema.table`** (예: `samples.nyctaxi.trips`)
-- 볼륨 경로: **`/Volumes/<catalog>/<schema>/<volume>/<path>`**
+- 테이블 전체 이름: `catalog.schema.table` (예: `samples.nyctaxi.trips`)
+- 볼륨 경로: `/Volumes/<catalog>/<schema>/<volume>/<path>`
 - 스키마 안에는 테이블뿐 아니라 **뷰, 볼륨, 함수, ML 모델**도 들어간다.
 - Unity Catalog는 객체의 **생성자, 생성 시각, 접근 권한**을 자동으로 추적한다.
 
@@ -189,19 +183,19 @@ LIST '/Volumes/my_catalog/my_schema/myfiles/'; -- 볼륨 안의 파일 목록
 | 접근 방법 | SQL (`SELECT`) | 파일 경로 (`/Volumes/...`), `read_files`, `LIST` |
 | 비유 | DB 테이블 | 권한 관리가 적용된 폴더 |
 
-### 4-3. Managed vs External 🎯🎯
+### 4-3. Managed vs External
 
 | 구분 | Managed (관리형) | External (외부) |
 |---|---|---|
 | 데이터 위치 | Unity Catalog가 관리하는 스토리지 위치 | 사용자가 지정한 `LOCATION` |
 | `DROP TABLE` 시 | **메타데이터 + 데이터 파일 모두 삭제** (7일 내 `UNDROP` 가능) | **메타데이터만 삭제, 파일은 남음** |
 | 생성 문법 | `CREATE TABLE t (...)` | `CREATE TABLE t (...) LOCATION 's3://...'` |
-| 권장 여부 | ✅ 기본 권장 (자동 최적화 혜택) | 기존 데이터 위치를 그대로 써야 할 때 |
+| 권장 여부 | O 기본 권장 (자동 최적화 혜택) | 기존 데이터 위치를 그대로 써야 할 때 |
 
 - 볼륨도 **Managed Volume / External Volume** 두 가지가 있다.
 - 외부 스토리지 접근 구조: **Storage Credential**(클라우드 인증 정보) → **External Location**(경로 + 크리덴셜) → External Table / External Volume
 
-### 4-4. 권한 관리 (GRANT / REVOKE) 🎯
+### 4-4. 권한 관리 (GRANT / REVOKE)
 
 ```sql
 -- 분석가 그룹에게 골드 테이블 조회만 허용하는 전형적인 패턴
@@ -226,7 +220,7 @@ ALTER TABLE prod.sales.revenue_gold OWNER TO `data_eng_team`;
 
 - 권한은 **상속**된다: 카탈로그에 `SELECT`를 부여하면 하위 모든 스키마·테이블에 적용.
 - 실무 원칙: 분석가에게는 **Gold에 SELECT**, Bronze 접근은 제한.
-- 세밀한 보안: **Row Filter**(행 수준), **Column Mask**(열 수준), **Dynamic View**(`is_account_group_member()` 활용) → Professional 시험의 보안 영역.
+- 세밀한 보안: **Row Filter**(행 수준), **Column Mask**(열 수준), **Dynamic View**(`is_account_group_member()` 활용)
 
 ### 4-5. 거버넌스 기능
 
@@ -237,7 +231,7 @@ ALTER TABLE prod.sales.revenue_gold OWNER TO `data_eng_team`;
 | **Insights (사용 현황)** | 최근 쿼리 활동, 자주 쿼리하는 사용자 | 실제로 쓰이는 테이블 파악 |
 | **Audit (감사)** | 누가 언제 무엇에 접근했는지 기록 | 컴플라이언스 |
 
-- **System Tables**로 감사·리니지·비용을 SQL로 조회할 수 있다: `system.access.audit`, `system.access.table_lineage`, `system.billing.usage` 등 (Professional 시험의 모니터링 영역).
+- **System Tables**로 감사·리니지·비용을 SQL로 조회할 수 있다: `system.access.audit`, `system.access.table_lineage`, `system.billing.usage` 등.
 
 ### 4-6. information_schema와 DESCRIBE
 
@@ -279,7 +273,7 @@ SELECT * FROM read_files(
 - 그 밖의 유용한 옵션: `sep`(구분자), `schemaHints`(일부 컬럼 타입 지정), `multiLine`(여러 줄 JSON)
 - 형식 옵션은 헤더가 없거나, 비표준 구분자를 쓰거나, 데이터 타입이 모호한 파일에서 특히 중요하다.
 
-### 5-2. `_rescued_data` 컬럼 🎯
+### 5-2. `_rescued_data` 컬럼
 
 - `read_files`(와 Auto Loader)가 **자동으로 추가**하는 컬럼.
 - 추론된 스키마에 **맞지 않는 값**(잘못된 타입, 추가 필드, 형식 오류)을 **버리거나 에러를 내는 대신 이 컬럼에 보관**한다.
@@ -303,7 +297,7 @@ FROM read_files(
 - Databricks의 **기본 테이블 포맷은 Delta** → 생성 즉시 트랜잭션 로그가 생겨 ACID, 시간 여행, 스키마 강제가 가능해진다.
 - SQL에서 문자열 결합은 `||` : `'/Volumes/' || my_catalog || '/' || my_schema || '/myfiles/'`
 
-> 🎯 **테이블이 이미 있을 때의 동작**
+> **테이블이 이미 있을 때의 동작**
 >
 > | 문법 | 테이블이 이미 있으면 |
 > |---|---|
@@ -315,9 +309,9 @@ FROM read_files(
 
 ## 6. Delta Lake와 DML
 
-### 6-1. Delta Lake의 원리 🎯🎯
+### 6-1. Delta Lake의 원리
 
-**Delta 테이블 = Parquet 데이터 파일 + `_delta_log` 트랜잭션 로그**
+**Delta 테이블 = Parquet 데이터 파일 +** `_delta_log` **트랜잭션 로그**
 
 ```
 my_table/
@@ -361,7 +355,7 @@ DELETE FROM employees WHERE FirstName = 'Aiden';
 - 모든 DML은 **원자적**이고, 실행할 때마다 테이블의 **새 버전**이 생성된다.
 - UPDATE/DELETE로 바뀐 원래 값은 손실되지 않고 이전 버전에 남아 있다.
 
-### 6-3. MERGE INTO (Upsert) 🎯🎯🎯 — 시험 최다 출제
+### 6-3. MERGE INTO (Upsert)
 
 ```sql
 MERGE INTO employees AS t                    -- 대상 테이블
@@ -373,11 +367,11 @@ WHEN NOT MATCHED THEN INSERT *               -- 키가 없으면 삽입
 WHEN NOT MATCHED BY SOURCE THEN DELETE;      -- 소스에 없는 대상 행 삭제 (선택)
 ```
 
-- **중복 없이 적재**하려면 `WHEN NOT MATCHED THEN INSERT *`만 사용 → "insert-only merge"
-- ⚠️ 소스에 같은 키가 여러 개 있으면 오류 → 소스를 먼저 중복 제거해야 한다.
+- **중복 없이 적재**하려면 `WHEN NOT MATCHED THEN INSERT` *만 사용 → "insert-only merge"
+- 주의: 소스에 같은 키가 여러 개 있으면 오류 → 소스를 먼저 중복 제거해야 한다.
 - CDC(Change Data Capture) 처리, SCD Type 1/2 구현의 기본 도구.
 
-### 6-4. 그 밖의 Delta 핵심 기능 🎯
+### 6-4. 그 밖의 Delta 핵심 기능
 
 | 기능 | 문법 / 설명 |
 |---|---|
@@ -386,7 +380,7 @@ WHEN NOT MATCHED BY SOURCE THEN DELETE;      -- 소스에 없는 대상 행 삭�
 | **제약 조건** | `ALTER TABLE t ADD CONSTRAINT c CHECK (amount > 0);`, `NOT NULL` |
 | **OPTIMIZE** | 작은 파일들을 큰 파일로 합침 (small file problem 해결) |
 | **Z-ORDER** | `OPTIMIZE t ZORDER BY (col)` — 데이터 스키핑 향상 (레거시 방식) |
-| **Liquid Clustering** ⭐ | `CREATE TABLE t ... CLUSTER BY (col)` / `CLUSTER BY AUTO` — 파티셔닝과 Z-ORDER의 **현대적 대체** |
+| **Liquid Clustering** (권장) | `CREATE TABLE t ... CLUSTER BY (col)` / `CLUSTER BY AUTO` — 파티셔닝과 Z-ORDER의 **현대적 대체** |
 | **Predictive Optimization** | Managed 테이블에 대해 OPTIMIZE / VACUUM / ANALYZE를 **자동 실행**. 그래서 히스토리에 내가 실행하지 않은 `OPTIMIZE` 버전이 끼어 있을 수 있다 |
 | **Deletion Vectors** | DELETE/UPDATE 시 파일을 다시 쓰지 않고 "삭제 표시"만 → 쓰기 성능 향상 |
 | **Change Data Feed (CDF)** | `delta.enableChangeDataFeed = true` 설정 후 `table_changes('t', 2)`로 행 단위 변경분 조회 |
@@ -415,7 +409,7 @@ DESCRIBE HISTORY employees;
 - **사용 시점:** 감사(누가·언제·무엇을), 예상치 못한 데이터 디버깅, 복원할 버전 번호 찾기
 - DML(INSERT/UPDATE/DELETE/MERGE)뿐 아니라 DDL(CREATE, ALTER)도 버전을 만든다.
 - **실제 데이터 변경이 없는 작업은 새 버전을 만들지 않는다** (예: 0행을 적재한 COPY INTO).
-- ⚠️ 자동 OPTIMIZE가 버전을 차지할 수 있으므로 "INSERT는 1번, UPDATE는 2번"처럼 **추측하지 말고 반드시 히스토리로 버전 번호를 확인**한다.
+- 주의: 자동 OPTIMIZE가 버전을 차지할 수 있으므로 "INSERT는 1번, UPDATE는 2번"처럼 **추측하지 말고 반드시 히스토리로 버전 번호를 확인**한다.
 
 ### 7-2. 이전 버전 조회 (Time Travel)
 
@@ -444,9 +438,9 @@ EXCEPT
 SELECT * FROM employees VERSION AS OF 0;
 ```
 
-> ⚠️ **행 수 비교만으로는 부족하다.** 1행을 추가하고 1행을 삭제하거나 값을 UPDATE하면 행 수는 같지만 내용은 다르다. 내용 비교는 `EXCEPT`로.
+> 주의: **행 수 비교만으로는 부족하다.** 1행을 추가하고 1행을 삭제하거나 값을 UPDATE하면 행 수는 같지만 내용은 다르다. 내용 비교는 `EXCEPT`로.
 
-### 7-4. RESTORE — 실수 복구 🎯🎯
+### 7-4. RESTORE — 실수 복구
 
 ```sql
 RESTORE TABLE employees TO VERSION AS OF 1;
@@ -457,11 +451,12 @@ RESTORE TABLE employees TO TIMESTAMP AS OF '2026-11-16 09:00:00';
 - 일부 행만 되살리려면: `INSERT INTO t SELECT * FROM t VERSION AS OF n WHERE ...` 또는 MERGE.
 
 **삭제 사고 대응 절차**
+
 1. `DESCRIBE HISTORY t` → `operation = DELETE`인 버전 n 확인
 2. `SELECT * FROM t VERSION AS OF n-1` → 삭제 전 상태 확인
 3. `RESTORE TABLE t TO VERSION AS OF n-1` 또는 필요한 행만 다시 INSERT
 
-### 7-5. VACUUM과 보존 기간 🎯🎯 (시험 함정)
+### 7-5. VACUUM과 보존 기간
 
 ```sql
 VACUUM employees;                   -- 보존 기간(기본 7일)이 지난, 더 이상 참조되지 않는 파일 삭제
@@ -475,7 +470,7 @@ VACUUM employees DRY RUN;           -- 삭제될 파일 미리보기
 | `delta.logRetentionDuration` | **30일** | 트랜잭션 로그(히스토리) 보존 기간 |
 
 - **VACUUM 후에는 보존 기간 이전 버전으로 시간 여행 불가** (참조하던 데이터 파일이 사라졌으므로).
-- ⚠️ 히스토리 목록은 30일간 보여도, VACUUM이 실행됐다면 **실제로 조회 가능한 기간은 7일**일 수 있다.
+- 주의: 히스토리 목록은 30일간 보여도, VACUUM이 실행됐다면 **실제로 조회 가능한 기간은 7일**일 수 있다.
 - 7일 미만으로 VACUUM하려면 안전장치(`spark.databricks.delta.retentionDurationCheck.enabled = false`)를 꺼야 하며, 실행 중인 읽기/쓰기를 깨뜨릴 위험이 있다.
 - 개인정보 삭제 요청(GDPR 등) 시: DELETE만으로는 이전 버전에 데이터가 남는다 → **VACUUM까지 해야 물리적으로 삭제**된다.
 
@@ -485,21 +480,21 @@ VACUUM employees DRY RUN;           -- 삭제될 파일 미리보기
 
 **Lakeflow Connect**는 Databricks의 데이터 수집 기능 전체를 묶는 이름이다. 파일 업로드, COPY INTO, Auto Loader, SaaS·DB용 관리형 커넥터를 포함한다.
 
-### 8-1. 방법별 비교 🎯🎯
+### 8-1. 방법별 비교
 
 | 방법 | 방식 | 재실행 안전성 | 처리한 파일 추적 | 적합한 상황 |
 |---|---|---|---|---|
-| **CTAS** | SQL로 **새 테이블 생성** | 일회성 | ✗ | 일회성 생성, 컬럼 선택·변환, 재현성 필요 |
-| **파일 업로드 (UI)** | 코드 없이 파일 업로드 → 형식 감지·스키마 추론 후 테이블 생성 | ✗ (수동) | ✗ | 받은 스프레드시트를 빠르게 쿼리해야 할 때. 재현 불가 |
-| **COPY INTO** | SQL로 **기존 테이블에 추가** | ✅ 멱등 | ✅ | 정기적으로 파일이 쌓이는 디렉터리, 수천 개 규모 |
-| **Auto Loader** | Structured Streaming (`cloudFiles`) | ✅ 멱등 | ✅ (체크포인트) | **수백만 파일**, 지속 도착, 저지연, 스키마 진화 |
-| **Streaming Table** | `CREATE STREAMING TABLE ... STREAM read_files()` | ✅ | ✅ (내부적으로 Auto Loader) | 선언적 파이프라인의 Bronze |
-| **관리형 커넥터** | 설정 기반 | ✅ | ✅ | Salesforce, SQL Server, Workday 등 SaaS/DB 수집 |
+| **CTAS** | SQL로 **새 테이블 생성** | 일회성 | X | 일회성 생성, 컬럼 선택·변환, 재현성 필요 |
+| **파일 업로드 (UI)** | 코드 없이 파일 업로드 → 형식 감지·스키마 추론 후 테이블 생성 | X (수동) | X | 받은 스프레드시트를 빠르게 쿼리해야 할 때. 재현 불가 |
+| **COPY INTO** | SQL로 **기존 테이블에 추가** | O 멱등 | O | 정기적으로 파일이 쌓이는 디렉터리, 수천 개 규모 |
+| **Auto Loader** | Structured Streaming (`cloudFiles`) | O 멱등 | O (체크포인트) | **수백만 파일**, 지속 도착, 저지연, 스키마 진화 |
+| **Streaming Table** | `CREATE STREAMING TABLE ... STREAM read_files()` | O | O (내부적으로 Auto Loader) | 선언적 파이프라인의 Bronze |
+| **관리형 커넥터** | 설정 기반 | O | O | Salesforce, SQL Server, Workday 등 SaaS/DB 수집 |
 
-> 💡 **CTAS = 처음부터 테이블을 "만들기"**, **COPY INTO = 기존 테이블에 새 데이터를 "추가하기"**
+> **CTAS = 처음부터 테이블을 "만들기"**, **COPY INTO = 기존 테이블에 새 데이터를 "추가하기"**
 > 코드 기반 방법(CTAS, COPY INTO)은 반복 실행·파이프라인 포함·Git 버전 관리가 가능하다는 점이 수동 업로드와의 핵심 차이.
 
-### 8-2. COPY INTO 🎯🎯
+### 8-2. COPY INTO
 
 ```sql
 -- 1단계: 스키마를 정의한 빈 테이블 생성 (COPY INTO는 기존 테이블에만 적재)
@@ -543,10 +538,11 @@ COPY_OPTIONS ('mergeSchema' = 'true',        -- 새 컬럼 등장 시 스키마 
 ```
 
 **제한 사항**
-- ⚠️ 파일을 **경로(이름) 기준**으로 추적한다 → 같은 이름으로 내용만 바꿔 덮어쓴 파일은 **다시 처리하지 않는다.**
+
+- 주의: 파일을 **경로(이름) 기준**으로 추적한다 → 같은 이름으로 내용만 바꿔 덮어쓴 파일은 **다시 처리하지 않는다.**
 - 대규모·저지연 시나리오에는 **Auto Loader / Streaming Table**이 권장된다.
 
-### 8-3. Auto Loader 🎯🎯🎯
+### 8-3. Auto Loader
 
 ```python
 (spark.readStream
@@ -561,15 +557,16 @@ COPY_OPTIONS ('mergeSchema' = 'true',        -- 새 컬럼 등장 시 스키마 
     .toTable("cat.sch.bronze"))
 ```
 
-| 개념 | 설명 |
-|---|---|
-| **파일 감지 모드** | Directory listing(기본, 디렉터리를 나열해 새 파일 탐지) / File notification(클라우드 이벤트·큐 사용, 대규모용) |
-| **`cloudFiles.schemaEvolutionMode`** | `addNewColumns`(기본: 새 컬럼 발견 시 스트림이 실패하고 스키마를 갱신 → 재시작하면 반영) / `rescue`(새 컬럼을 `_rescued_data`로) / `failOnNewColumns` / `none` |
-| **`cloudFiles.schemaHints`** | 일부 컬럼의 타입을 직접 지정 |
-| **Trigger** | `availableNow=True`(증분 배치처럼 동작 후 종료) / `processingTime='1 minute'`(계속 실행) |
-| **Checkpoint** | 처리 위치를 저장 → 장애 후 재시작해도 **정확히 한 번(exactly-once)** 처리 |
+| 개념                               | 설명                                                                                                                           |
+| -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| **파일 감지 모드**                     | Directory listing(기본, 디렉터리를 나열해 새 파일 탐지) / File notification(클라우드 이벤트·큐 사용, 대규모용)                                            |
+| `cloudFiles.schemaEvolutionMode` | `addNewColumns`(기본: 새 컬럼 발견 시 스트림이 실패하고 스키마를 갱신 → 재시작하면 반영) / `rescue`(새 컬럼을 `_rescued_data`로) / `failOnNewColumns` / `none` |
+| `cloudFiles.schemaHints`         | 일부 컬럼의 타입을 직접 지정                                                                                                             |
+| **Trigger**                      | `availableNow=True`(증분 배치처럼 동작 후 종료) / `processingTime='1 minute'`(계속 실행)                                                    |
+| **Checkpoint**                   | 처리 위치를 저장 → 장애 후 재시작해도 **정확히 한 번(exactly-once)** 처리                                                                          |
 
-> 🎯 **COPY INTO vs Auto Loader 선택 기준**
+> **COPY INTO vs Auto Loader 선택 기준**
+>
 > - 파일 수천 개 수준, 간단한 SQL → **COPY INTO**
 > - 파일 수백만 개, 지속적으로 도착, 스키마가 바뀜 → **Auto Loader**
 
@@ -577,19 +574,20 @@ COPY_OPTIONS ('mergeSchema' = 'true',        -- 새 컬럼 등장 시 스키마 
 
 ## 9. 메달리온 아키텍처
 
-### 9-1. 레이어 정의 🎯
+### 9-1. 레이어 정의
 
 데이터를 세 개의 레이어로 나누고, 레이어를 거칠수록 품질과 구조가 향상된다.
 
-**원시 데이터 → 🥉 Bronze → 🥈 Silver → 🥇 Gold → 비즈니스 활용**
+**원시 데이터 → Bronze → Silver → Gold → 비즈니스 활용**
 
 | 레이어 | 역할 | 처리 내용 | 대표 구현 |
 |---|---|---|---|
-| 🥉 **Bronze** | 데이터 착륙 지점(landing zone). **"진실의 원천"** | 수신된 그대로 저장. 변환·필터 없음. 품질 문제(누락, 잘못된 타입, 중복)도 그대로 | COPY INTO, Auto Loader, Streaming Table |
-| 🥈 **Silver** | 정제·보강. **분석의 기반** | 컬럼명·값 표준화, 타입 변환, 중복 제거, 잘못된 레코드 필터, 감사 컬럼(처리 시각) 추가 | `CREATE OR REPLACE TABLE AS SELECT`, MERGE, Materialized View |
-| 🥇 **Gold** | 비즈니스 즉시 활용 | 특정 질문에 맞춘 집계·필터·조인. 대시보드와 분석가가 사용 | `INSERT OVERWRITE`, Materialized View |
+| **Bronze** | 데이터 착륙 지점(landing zone). **"진실의 원천"** | 수신된 그대로 저장. 변환·필터 없음. 품질 문제(누락, 잘못된 타입, 중복)도 그대로 | COPY INTO, Auto Loader, Streaming Table |
+| **Silver** | 정제·보강. **분석의 기반** | 컬럼명·값 표준화, 타입 변환, 중복 제거, 잘못된 레코드 필터, 감사 컬럼(처리 시각) 추가 | `CREATE OR REPLACE TABLE AS SELECT`, MERGE, Materialized View |
+| **Gold** | 비즈니스 즉시 활용 | 특정 질문에 맞춘 집계·필터·조인. 대시보드와 분석가가 사용 | `INSERT OVERWRITE`, Materialized View |
 
 **왜 3개 레이어인가?**
+
 1. **원본 보존과 재처리:** 변환 로직에 버그가 있으면 Silver 로직만 고쳐 Bronze에서 다시 실행하면 된다. 원본은 절대 손실되지 않는다.
 2. **관심사 분리:** 수집 / 변환 / 소비를 분리해 각각 독립적으로 디버깅·관리.
 3. **재사용:** 하나의 Silver에서 재무용(매출 집계), HR용(부서별 인원), 운영용(SLA 지표) Gold를 여러 개 만든다.
@@ -602,7 +600,7 @@ COPY_OPTIONS ('mergeSchema' = 'true',        -- 새 컬럼 등장 시 스키마 
 ### 9-2. 구현 예시
 
 ```sql
--- 🥉 Bronze: 빈 테이블 + COPY INTO (원시 그대로)
+-- Bronze: 빈 테이블 + COPY INTO (원시 그대로)
 CREATE TABLE IF NOT EXISTS employees_bronze (
   ID INT, FirstName STRING, Country STRING, Role STRING
 );
@@ -611,7 +609,7 @@ FROM '/Volumes/my_catalog/my_schema/myfiles/'
 FILEFORMAT = CSV
 FORMAT_OPTIONS ('header' = 'true', 'inferSchema' = 'true');
 
--- 🥈 Silver: 표준화 + 감사 컬럼 + 행 번호
+-- Silver: 표준화 + 감사 컬럼 + 행 번호
 CREATE OR REPLACE TABLE employees_silver AS
 SELECT
   ID,
@@ -623,7 +621,7 @@ SELECT
   ROW_NUMBER() OVER (ORDER BY ID) AS row_number  -- 윈도우 함수
 FROM employees_bronze;
 
--- 🥇 Gold: 임시 뷰에 집계 로직 정의 → 스키마가 고정된 테이블에 INSERT OVERWRITE
+-- Gold: 임시 뷰에 집계 로직 정의 → 스키마가 고정된 테이블에 INSERT OVERWRITE
 CREATE OR REPLACE TEMP VIEW temp_total_roles AS
 SELECT Role, COUNT(*) AS TotalEmployees
 FROM employees_silver
@@ -635,18 +633,18 @@ INSERT OVERWRITE total_roles_gold
 SELECT * FROM temp_total_roles;
 ```
 
-### 9-3. `INSERT INTO` vs `INSERT OVERWRITE` vs `CREATE OR REPLACE` 🎯
+### 9-3. `INSERT INTO` vs `INSERT OVERWRITE` vs `CREATE OR REPLACE`
 
 | 명령 | 동작 | 스키마 | 용도 |
 |---|---|---|---|
-| `INSERT INTO` | 기존 데이터에 **추가** | 기존 스키마 강제 | 누적 적재 (⚠️ 재실행 시 중복 위험) |
+| `INSERT INTO` | 기존 데이터에 **추가** | 기존 스키마 강제 | 누적 적재 (주의: 재실행 시 중복 위험) |
 | `INSERT OVERWRITE` | 데이터 **전체 교체** | **기존 스키마 유지**, 다르면 실패 | Gold 정기 갱신 — 테이블 정의·권한을 그대로 유지 |
 | `CREATE OR REPLACE TABLE ... AS` | 테이블 **정의와 데이터 모두 교체** | 새 스키마로 변경 가능 | Silver 전체 재계산 |
 
 - 세 가지 모두 히스토리에 새 버전을 남긴다 → 시간 여행 가능 (DROP 후 CREATE는 히스토리가 끊김).
 - Gold는 **스키마·권한을 한 번 정의**하고 내용만 주기적으로 갱신하는 `INSERT OVERWRITE` 패턴이 일반적.
 
-### 9-4. 뷰(View)의 종류 🎯
+### 9-4. 뷰(View)의 종류
 
 | 종류 | 문법 | 범위 / 수명 |
 |---|---|---|
@@ -679,7 +677,7 @@ SELECT * FROM temp_total_roles;
 - 실행 상태 흐름: `Pending → Running → Succeeded / Failed`
 - Job이 수행한 변경은 테이블 히스토리의 `userName`/`job` 컬럼으로 사람이 한 변경과 구분된다.
 
-### 10-2. 트리거 🎯
+### 10-2. 트리거
 
 | 트리거 | 설명 |
 |---|---|
@@ -689,7 +687,7 @@ SELECT * FROM temp_total_roles;
 | **Continuous** | 항상 실행 상태 유지 (종료되면 즉시 재시작) |
 | Manual | 수동 실행 / API 호출 |
 
-### 10-3. Run if 조건 (의존성 실행 조건) 🎯🎯
+### 10-3. Run if 조건 (의존성 실행 조건)
 
 | 조건 | 의미 | 쓰임 |
 |---|---|---|
@@ -700,7 +698,7 @@ SELECT * FROM temp_total_roles;
 | `At least one failed` | 하나 이상 실패 | 실패 알림, 롤백 태스크 |
 | `All failed` | 모두 실패 | 전체 실패 대응 |
 
-### 10-4. 운영 기능 🎯🎯
+### 10-4. 운영 기능
 
 | 기능 | 설명 |
 |---|---|
@@ -713,7 +711,7 @@ SELECT * FROM temp_total_roles;
 | **If/else 태스크, For each 태스크** | 조건 분기, 반복 실행 |
 | **Run as** | Job 실행 주체. **Service Principal 권장** (담당자 퇴사 시에도 Job이 깨지지 않도록) |
 | **Max concurrent runs** | 동시 실행 개수 제한 |
-| **Databricks Asset Bundles (DABs)** | Job·파이프라인을 YAML 코드로 정의하고 CI/CD로 dev → prod 배포 (Professional 시험 배포 영역의 핵심) |
+| **Databricks Asset Bundles (DABs)** | Job·파이프라인을 YAML 코드로 정의하고 CI/CD로 dev → prod 배포 |
 
 ---
 
@@ -731,7 +729,7 @@ SELECT * FROM temp_total_roles;
 | 데이터 품질 | 검사 코드를 직접 작성 | **Expectations** 내장, 자동 추적 |
 | 리니지 | 실행 기록 기반 | SQL 정의로부터 자동 구성 |
 
-### 11-2. 핵심 객체 🎯🎯
+### 11-2. 핵심 객체
 
 | 객체 | 문법 | 동작 | 주 용도 |
 |---|---|---|---|
@@ -742,7 +740,7 @@ SELECT * FROM temp_total_roles;
 ### 11-3. 전체 파이프라인 = SQL 3개
 
 ```sql
--- 🥉 Bronze: Streaming Table. STREAM 키워드 = 처리한 파일을 추적하는 증분 처리 (내부적으로 Auto Loader)
+-- Bronze: Streaming Table. STREAM 키워드 = 처리한 파일을 추적하는 증분 처리 (내부적으로 Auto Loader)
 CREATE OR REFRESH STREAMING TABLE employees_bronze_sdp
 COMMENT "Raw employee data ingested from CSV files."
 AS SELECT *
@@ -751,7 +749,7 @@ FROM STREAM read_files(
   format => 'csv', header => true, inferSchema => true
 );
 
--- 🥈 Silver: Materialized View + 데이터 품질 규칙
+-- Silver: Materialized View + 데이터 품질 규칙
 CREATE OR REFRESH MATERIALIZED VIEW employees_silver_sdp (
   CONSTRAINT valid_id   EXPECT (ID IS NOT NULL),
   CONSTRAINT valid_name EXPECT (FirstName IS NOT NULL)
@@ -762,7 +760,7 @@ AS SELECT ID, FirstName, Country, UPPER(Role) AS Role,
           current_date()      AS processed_date
 FROM employees_bronze_sdp;
 
--- 🥇 Gold: Materialized View (집계)
+-- Gold: Materialized View (집계)
 CREATE OR REFRESH MATERIALIZED VIEW total_roles_gold_sdp
 COMMENT "Employee count by role."
 AS SELECT Role, COUNT(*) AS TotalEmployees
@@ -777,10 +775,10 @@ GROUP BY Role;
 | Gold | TEMP VIEW + CREATE TABLE + INSERT OVERWRITE (3단계) | MATERIALIZED VIEW (1단계) |
 | 오케스트레이션 | Job 2태스크 + 의존성 | 자동 (Silver가 Bronze를, Gold가 Silver를 읽는다는 것을 스스로 파악) |
 
-- ⚠️ 선언적 파이프라인의 소스 코드는 노트북에서 셀 단위로 **직접 실행할 수 없다.** ETL 파이프라인으로 등록해 파이프라인 엔진이 실행한다.
+- 주의: 선언적 파이프라인의 소스 코드는 노트북에서 셀 단위로 **직접 실행할 수 없다.** ETL 파이프라인으로 등록해 파이프라인 엔진이 실행한다.
 - 파이프라인 설정 항목: 게시 대상 **카탈로그·스키마**, **소스 코드 경로**, **configuration**(키-값, SQL에서 `${key}`로 참조), compute
 
-### 11-4. Expectations (데이터 품질 규칙) 🎯🎯🎯
+### 11-4. Expectations (데이터 품질 규칙)
 
 | 위반 시 동작 | 문법 | 결과 |
 |---|---|---|
@@ -788,7 +786,7 @@ GROUP BY Role;
 | **행 삭제** | `EXPECT (cond) ON VIOLATION DROP ROW` | 위반 행은 **버리고** 진행, 기록 |
 | **업데이트 실패** | `EXPECT (cond) ON VIOLATION FAIL UPDATE` | 위반 시 **해당 플로가 실패** (트랜잭션 롤백) |
 
-- ⚠️ `ON VIOLATION WARN`이라는 문법은 **없다.** 경고 모드는 `ON VIOLATION` 절을 생략하는 것.
+- 주의: `ON VIOLATION WARN`이라는 문법은 **없다.** 경고 모드는 `ON VIOLATION` 절을 생략하는 것.
 - 통과/실패 건수는 파이프라인의 데이터 품질 지표와 **Event Log**(`event_log()` 테이블 함수로 SQL 조회)에 기록된다.
 - **격리(quarantine) 패턴:** 반대 조건으로 별도 테이블을 만들어 불량 레코드를 보관한다.
 
@@ -850,7 +848,7 @@ AS SELECT ... FROM b;
 
 ## 13. 제품 명칭 변경 정리
 
-Databricks는 제품 이름이 자주 바뀐다. 시험 문제·블로그·커뮤니티 글에 옛 이름이 섞여 나오므로 대응 관계를 알아두자.
+Databricks는 제품 이름이 자주 바뀐다. 문서·블로그·커뮤니티 글에 옛 이름이 섞여 나오므로 대응 관계를 알아두자.
 
 | 현재 이름 | 이전 이름 |
 |---|---|
@@ -870,7 +868,7 @@ Databricks는 제품 이름이 자주 바뀐다. 시험 문제·블로그·커�
 
 ## 14. 자격증 준비 가이드
 
-> ⚠️ 시험 구성·문항 수·비용은 수시로 개편된다. 응시 전 [공식 Certification 페이지](https://www.databricks.com/learn/training/certification)의 **최신 Exam Guide**를 반드시 확인할 것.
+> 주의: 시험 구성·문항 수·비용은 수시로 개편된다. 응시 전 [공식 Certification 페이지](https://www.databricks.com/learn/training/certification)의 **최신 Exam Guide**를 반드시 확인할 것.
 
 ### 14-1. Associate vs Professional
 
@@ -882,21 +880,21 @@ Databricks는 제품 이름이 자주 바뀐다. 시험 문제·블로그·커�
 | 규모 (대략) | 약 45문항 / 90분 | 약 60문항 / 120분 |
 | 코드 언어 | SQL + Python(PySpark) | 동일, 코드 비중 더 높음 |
 
-> 💡 최종 목표가 Professional이어도 **Associate를 먼저** 취득하는 것을 권장한다. Associate 범위가 Professional의 기초 전제다.
+> 최종 목표가 Professional이어도 **Associate를 먼저** 취득하는 것을 권장한다. Associate 범위가 Professional의 기초 전제다.
 
 ### 14-2. 이 문서가 다룬 범위와 추가 학습 필요 영역
 
 | 시험 주제 | 이 문서 | 추가로 공부할 것 |
 |---|---|---|
-| 플랫폼 / Compute | 🟢 | 클러스터 정책, 런타임 버전 |
-| Unity Catalog | 🟡 | Row filter·Column mask 실습, Delta Sharing, Lakehouse Federation |
-| Delta Lake | 🟢 | MERGE 심화(SCD Type 2), 동시성 충돌, CDF 실습 |
-| 데이터 수집 | 🟡 | Auto Loader 심화, Structured Streaming(트리거, 체크포인트, 워터마크, 상태 저장 연산) |
-| 메달리온 아키텍처 | 🟢 | 스트리밍 기반 메달리온, 중복 제거 패턴 |
-| Lakeflow Jobs | 🟡 | 파라미터·Task values 실습, Asset Bundles(CI/CD) |
-| Declarative Pipelines | 🟡 | AUTO CDC, Event Log 분석, Python API |
-| 성능 최적화 / 모니터링 | 🔴 | Spark UI, Query Profile, 셔플·스큐·스필, System Tables, 비용 최적화 |
-| 데이터 모델링 / 보안 / 테스트 | 🔴 | SCD, PII 처리, 단위 테스트, 디버깅 |
+| 플랫폼 / Compute | 충분 | 클러스터 정책, 런타임 버전 |
+| Unity Catalog | 일부 | Row filter·Column mask 실습, Delta Sharing, Lakehouse Federation |
+| Delta Lake | 충분 | MERGE 심화(SCD Type 2), 동시성 충돌, CDF 실습 |
+| 데이터 수집 | 일부 | Auto Loader 심화, Structured Streaming(트리거, 체크포인트, 워터마크, 상태 저장 연산) |
+| 메달리온 아키텍처 | 충분 | 스트리밍 기반 메달리온, 중복 제거 패턴 |
+| Lakeflow Jobs | 일부 | 파라미터·Task values 실습, Asset Bundles(CI/CD) |
+| Declarative Pipelines | 일부 | AUTO CDC, Event Log 분석, Python API |
+| 성능 최적화 / 모니터링 | 없음 | Spark UI, Query Profile, 셔플·스큐·스필, System Tables, 비용 최적화 |
+| 데이터 모델링 / 보안 / 테스트 | 없음 | SCD, PII 처리, 단위 테스트, 디버깅 |
 
 ### 14-3. Professional 시험 주요 영역 (대략적 분류)
 
@@ -925,136 +923,136 @@ Databricks는 제품 이름이 자주 바뀐다. 시험 문제·블로그·커�
 > 답을 가리고 먼저 생각해본 뒤 펼쳐보자.
 
 **Q1.** Unity Catalog의 네임스페이스를 넓은 단위부터 쓰고, 테이블과 볼륨의 차이를 설명하라.
-<details><summary>정답</summary>
+
+정답
 
 Metastore → Catalog → Schema → Table/Volume (테이블 이름은 `catalog.schema.table` 3단계). 테이블은 정형·쿼리 가능한 데이터(SQL로 접근), 볼륨은 테이블로 만들기 전의 원시 파일(CSV, JSON 등)을 경로로 관리하는 권한 적용 폴더.
-</details>
 
 **Q2.** `read_files`로 CSV를 읽었더니 `_rescued_data` 컬럼에 값이 들어 있다. 무슨 의미인가?
-<details><summary>정답</summary>
+
+정답
 
 해당 행의 일부 값이 추론된 스키마와 맞지 않았다(타입 불일치, 추가 필드, 형식 오류). 데이터를 버리거나 오류를 내는 대신 이 컬럼에 보관한 것. 정상이면 null.
-</details>
 
 **Q3.** `CREATE TABLE IF NOT EXISTS`, `CREATE OR REPLACE TABLE`, 옵션 없는 `CREATE TABLE`은 테이블이 이미 있을 때 각각 어떻게 동작하는가?
-<details><summary>정답</summary>
+
+정답
 
 IF NOT EXISTS: 아무것도 하지 않음. OR REPLACE: 내용을 교체하고 새 버전으로 기록(히스토리 유지). 옵션 없음: 오류.
-</details>
 
 **Q4.** 버전 0의 데이터를 조회하는 문법 3가지는? 버전 번호는 어떻게 확인해야 하는가?
-<details><summary>정답</summary>
+
+정답
 
 `VERSION AS OF 0`, `@v0`, `TIMESTAMP AS OF '<시각>'`. 자동 OPTIMIZE(Predictive Optimization) 등이 버전을 차지할 수 있으므로 추측하지 말고 `DESCRIBE HISTORY`로 확인.
-</details>
 
 **Q5.** 팀원이 실수로 행을 삭제했다. 확인하고 복구하는 절차는?
-<details><summary>정답</summary>
+
+정답
 
 ① `DESCRIBE HISTORY t`로 DELETE 버전 n 확인 → ② `VERSION AS OF n-1`로 삭제 전 상태 확인 → ③ `RESTORE TABLE t TO VERSION AS OF n-1` 또는 삭제된 행만 `INSERT INTO t SELECT ... FROM t VERSION AS OF n-1 WHERE ...`. 단 VACUUM으로 파일이 지워졌다면 불가.
-</details>
 
 **Q6.** VACUUM을 기본 설정으로 실행한 후 10일 전 버전으로 시간 여행이 가능한가?
-<details><summary>정답</summary>
+
+정답
 
 불가능. VACUUM 기본 보존 기간은 7일이라 그 이전 버전이 참조하던 데이터 파일이 삭제된다. 로그는 30일간 보존되므로 히스토리 목록에는 보일 수 있지만 데이터 조회는 실패한다.
-</details>
 
 **Q7.** 행 수가 같은 두 버전은 내용도 같다고 볼 수 있는가?
-<details><summary>정답</summary>
+
+정답
 
 아니다. 추가 1건 + 삭제 1건, 또는 UPDATE는 행 수를 바꾸지 않는다. 내용 비교는 `EXCEPT` 등으로 해야 한다.
-</details>
 
 **Q8.** CTAS와 COPY INTO의 차이와 각각의 사용 시점은?
-<details><summary>정답</summary>
+
+정답
 
 CTAS: 새 테이블을 만드는 일회성 작업, 스키마는 쿼리 결과에서 추론 → 일회성 생성, 컬럼 선택·변환. COPY INTO: 기존 테이블에 추가하고 처리한 파일을 추적해 멱등 → 정기적으로 새 파일이 도착하는 디렉터리의 증분 적재.
-</details>
 
 **Q9.** COPY INTO를 두 번 실행했더니 두 번째는 `num_affected_rows = 0`이었다. 이유와 히스토리 변화는?
-<details><summary>정답</summary>
+
+정답
 
 이미 처리한 파일을 경로 기준으로 기억하고 건너뛰었다(멱등성). 데이터 변경이 없으므로 새 버전도 생기지 않는다.
-</details>
 
 **Q10.** 파트너가 같은 파일명 `daily.csv`를 매일 내용만 바꿔 덮어쓴다. COPY INTO로 괜찮은가?
-<details><summary>정답</summary>
+
+정답
 
 문제가 있다. 경로 기준 추적이므로 덮어쓴 파일은 재처리하지 않는다. 파일명에 날짜를 넣도록 협의하거나, `COPY_OPTIONS ('force' = 'true')`(멱등성 포기, 중복 주의)를 쓰거나, Auto Loader의 `cloudFiles.allowOverwrites` 등을 검토한다.
-</details>
 
 **Q11.** 수백만 개의 JSON 파일이 계속 도착하고 스키마가 가끔 바뀐다. 무엇을 쓰는가?
-<details><summary>정답</summary>
+
+정답
 
 Auto Loader(`format("cloudFiles")`, `cloudFiles.schemaLocation`, 스키마 진화 모드) 또는 선언적 파이프라인의 Streaming Table(`STREAM read_files`). 대규모라면 File notification 모드도 고려.
-</details>
 
 **Q12.** 데이터를 최종 테이블에 바로 적재하지 않고 Bronze/Silver/Gold를 거치는 이유는?
-<details><summary>정답</summary>
+
+정답
 
 원본(Bronze)을 보존해 변환 버그 시 재처리 가능, 수집·변환·소비의 분리로 디버깅·관리 용이, 하나의 Silver에서 여러 Gold 재사용, 레이어별 접근 제어(분석가는 Gold만).
-</details>
 
 **Q13.** Gold 테이블을 매일 갱신할 때 `CREATE OR REPLACE` 대신 `INSERT OVERWRITE`를 쓰는 이유는?
-<details><summary>정답</summary>
+
+정답
 
 테이블 정의(스키마)와 권한 설정을 한 번만 해두고 내용만 교체하기 위해. INSERT OVERWRITE는 기존 스키마를 강제하므로 실수로 스키마가 바뀌는 것도 막아준다.
-</details>
 
 **Q14.** Job에서 Silver 태스크를 Bronze 태스크에 의존시키고 Run if를 `All succeeded`로 두는 이유는? 실패 알림 태스크와 정리 태스크는 각각 어떤 조건을 쓰는가?
-<details><summary>정답</summary>
+
+정답
 
 Bronze가 실패하면 Silver/Gold가 오래되거나 누락된 데이터로 실행되지 않도록. 실패 알림은 `At least one failed`, 성공·실패 무관 정리 작업은 `All done`.
-</details>
 
 **Q15.** Job이 중간 태스크에서 실패했다. 처음부터 다시 돌리지 않고 복구하는 기능은?
-<details><summary>정답</summary>
+
+정답
 
 Repair run — 실패한 태스크와 그 하위 태스크만 재실행한다.
-</details>
 
 **Q16.** 선언적 파이프라인에서 Streaming Table과 Materialized View는 각각 어디에 쓰는가?
-<details><summary>정답</summary>
+
+정답
 
 Streaming Table: append-only 소스의 증분 수집, Bronze. Materialized View: 변환·집계 결과 저장, 소스로부터 재계산(가능하면 증분), Silver/Gold.
-</details>
 
 **Q17.** Expectation 위반 시 동작 3가지와 문법은?
-<details><summary>정답</summary>
+
+정답
 
 경고(기본, 행 유지·기록): `EXPECT (cond)` / 행 삭제: `EXPECT (cond) ON VIOLATION DROP ROW` / 실패: `EXPECT (cond) ON VIOLATION FAIL UPDATE`.
-</details>
 
 **Q18.** Managed 테이블과 External 테이블을 각각 DROP하면?
-<details><summary>정답</summary>
+
+정답
 
 Managed: 메타데이터와 데이터 파일 모두 삭제(7일 내 UNDROP 가능). External: 메타데이터만 삭제, 스토리지의 파일은 남는다.
-</details>
 
 **Q19.** 분석가 그룹에 `prod.sales.revenue` 테이블 SELECT 권한만 줬는데 조회가 안 된다. 원인은?
-<details><summary>정답</summary>
+
+정답
 
 상위 객체에 대한 `USE CATALOG`(prod)와 `USE SCHEMA`(prod.sales) 권한이 없기 때문.
-</details>
 
 **Q20.** `%run`과 `dbutils.notebook.run()`의 차이는?
-<details><summary>정답</summary>
+
+정답
 
 `%run`은 같은 컨텍스트에서 실행해 변수·함수를 공유한다(인자 전달 불가). `dbutils.notebook.run()`은 별도로 실행되어 변수 공유가 없고, 파라미터 전달과 `dbutils.notebook.exit()`를 통한 반환값 수신이 가능하다.
-</details>
 
 **Q21.** Serverless, Pro, Classic SQL Warehouse의 차이는?
-<details><summary>정답</summary>
+
+정답
 
 Serverless: Databricks 계정에서 실행, Photon + Predictive IO + Intelligent Workload Management, 가장 빠른 시작(권장). Pro: 고객 계정에서 실행, Photon + Predictive IO, 네트워크·규정 준수 요건이 있을 때. Classic: Photon만, 레거시.
-</details>
 
 ---
 
-## 16. 참고 링크와 다음 학습
+## 16. 참고 링크
 
-### 16-1. 공식 문서 (AWS 기준, Azure/GCP는 경로 동일)
+### 공식 문서 (AWS 기준, Azure/GCP는 경로 동일)
 
 - Delta Lake: https://docs.databricks.com/aws/en/delta/
 - Unity Catalog: https://docs.databricks.com/aws/en/data-governance/unity-catalog/
@@ -1066,22 +1064,3 @@ Serverless: Databricks 계정에서 실행, Photon + Predictive IO + Intelligent
 - DLT 명칭 변경 안내: https://docs.databricks.com/aws/en/ldp/where-is-dlt
 - 메달리온 아키텍처: https://docs.databricks.com/aws/en/lakehouse/medallion
 - Genie Code: https://docs.databricks.com/aws/en/genie-code/
-
-### 16-2. 추천 다음 학습 과정
-
-1. **Data Ingestion with Lakeflow Connect** — 커넥터, 스트리밍 수집, 관리형 CDC
-2. **Build Data Pipelines with Apache Spark™ Declarative Pipelines** — 운영 수준 선언적 파이프라인
-3. **Deploy Workloads with Lakeflow Jobs** — 다단계·다중 환경 운영 배포
-
-- 교육 카탈로그: https://www.databricks.com/learn/training/home
-- 자격증: https://www.databricks.com/learn/training/certification
-
-### 16-3. 다음에 직접 실습해볼 것
-
-- [ ] Auto Loader 코드 작성, 스키마 진화 모드별 동작 비교
-- [ ] MERGE INTO로 upsert, SCD Type 2 구현
-- [ ] VACUUM · RESTORE · OPTIMIZE 실행 후 히스토리 확인
-- [ ] GRANT / REVOKE로 사용자별 권한 분리
-- [ ] Job에 Retry, 알림, Run if 조건, Repair run 적용
-- [ ] 선언적 파이프라인에서 `DROP ROW` / `FAIL UPDATE` 동작 비교
-- [ ] Spark UI / Query Profile 읽는 법
